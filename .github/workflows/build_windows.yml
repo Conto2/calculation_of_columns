@@ -17,7 +17,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.27.1'  # اختار النسخة المناسبة هنا
+          flutter-version: '3.27.1'  # تأكد النسخة دي شغالة معاك
 
       - name: Enable Windows platform
         run: flutter config --enable-windows-desktop
@@ -28,8 +28,11 @@ jobs:
       - name: Build Windows app
         run: flutter build windows
 
+      - name: Show Release folder content
+        run: dir build\windows\runner\Release\
+
       - name: Upload artifact (EXE)
         uses: actions/upload-artifact@v4
         with:
           name: cac_colume-Windows
-          path: build\windows\runner\Release\
+          path: build/windows/runner/Release/
