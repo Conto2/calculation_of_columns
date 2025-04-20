@@ -1,17 +1,35 @@
-workflows:
-  build-windows-app:
-    name: Build Windows EXE
-    environment:
-      flutter: stable
-    scripts:
+name: Build Windows App
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Set up Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          flutter-version: '3.27.1'  # اختار النسخة المناسبة هنا
+
+      - name: Enable Windows platform
+        run: flutter config --enable-windows-desktop
+
       - name: Install dependencies
-        script: |
-          flutter pub get
-      - name: Enable Windows support
-        script: |
-          flutter config --enable-windows-desktop
+        run: flutter pub get
+
       - name: Build Windows app
-        script: |
-          flutter build windows
-    artifacts:
-      - build/windows/runner/Release/*.exe
+        run: flutter build windows
+
+      - name: Upload artifact (EXE)
+        uses: actions/upload-artifact@v3
+        with:
+          name: Zoalna-Windows
+          path: build\windows\runner\Release\
