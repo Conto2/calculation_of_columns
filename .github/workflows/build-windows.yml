@@ -28,18 +28,13 @@ jobs:
       - name: Build Windows app
         run: flutter build windows
 
-      - name: Check if EXE exists
-        id: check_exe
+      - name: Show build folder contents
         run: |
-          if (Test-Path "build\windows\runner\Release") {
-            echo "found=true" >> $env:GITHUB_ENV
-          } else {
-            echo "found=false" >> $env:GITHUB_ENV
-          }
+          echo "== Directory Content =="
+          Get-ChildItem -Recurse build\windows\runner | Out-String | Write-Output
 
-      - name: Upload artifact (EXE)
-        if: env.found == 'true'
+      - name: Upload EXE file only
         uses: actions/upload-artifact@v4
         with:
-          name: my_windows_app
-          path: build\windows\runner\Release\
+          name: windows-exe
+          path: build/windows/runner/Release/*.exe
