@@ -1,9 +1,8 @@
-name: Build Windows App
+name: Build Flutter EXE for Windows
 
 on:
   push:
-    branches:
-      - main
+    branches: [ main ]
   workflow_dispatch:
 
 jobs:
@@ -11,30 +10,24 @@ jobs:
     runs-on: windows-latest
 
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v3
+    - uses: actions/checkout@v3
 
-      - name: Set up Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: '3.27.1'
+    - name: Set up Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.27.1'
 
-      - name: Enable Windows platform
-        run: flutter config --enable-windows-desktop
+    - name: Install dependencies
+      run: flutter pub get
 
-      - name: Install dependencies
-        run: flutter pub get
+    - name: Enable Windows Desktop
+      run: flutter config --enable-windows-desktop
 
-      - name: Build Windows app
-        run: flutter build windows
+    - name: Build EXE
+      run: flutter build windows
 
-      - name: Show build folder contents
-        run: |
-          echo "== Directory Content =="
-          Get-ChildItem -Recurse build\windows\runner | Out-String | Write-Output
-
-      - name: Upload EXE file only
-        uses: actions/upload-artifact@v4
-        with:
-          name: windows-exe
-          path: build/windows/runner/Release/*.exe
+    - name: Upload EXE artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: calculation_app
+        path: build/windows/runner/Release/
