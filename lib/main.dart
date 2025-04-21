@@ -17,6 +17,9 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'تحليل وتصميم الاعمده بمساعده الحاسوب',
       theme: ThemeData(
+        brightness: Brightness.light,
+        scaffoldBackgroundColor: Colors.white,
+        textTheme: TextTheme(bodyMedium: TextStyle(color: Colors.black)),
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),

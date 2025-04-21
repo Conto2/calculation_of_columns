@@ -146,7 +146,7 @@ class _ColumnAnalysisPageState extends State<AnalysisRectangularColumnsScreen> {
           (As * fy / ((e / (d - d2)) + 0.5));
     }
     Pn = Pn / 1000;
-
+    // print(Pn);
     setState(() {});
   }
 
@@ -179,6 +179,7 @@ class _ColumnAnalysisPageState extends State<AnalysisRectangularColumnsScreen> {
           key: _formKey,
           child: ListView(
             children: [
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -186,6 +187,7 @@ class _ColumnAnalysisPageState extends State<AnalysisRectangularColumnsScreen> {
                   buildField(fcCtrl, 'fc : Mpa', widt / 2.5),
                 ],
               ),
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -193,6 +195,7 @@ class _ColumnAnalysisPageState extends State<AnalysisRectangularColumnsScreen> {
                   buildField(hCtrl, 'h (mm)', widt / 2.5),
                 ],
               ),
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -200,6 +203,7 @@ class _ColumnAnalysisPageState extends State<AnalysisRectangularColumnsScreen> {
                   buildField(NCtrl, 'N ', widt / 2.5),
                 ],
               ),
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -207,6 +211,7 @@ class _ColumnAnalysisPageState extends State<AnalysisRectangularColumnsScreen> {
                   buildField(eCtrl, 'e (mm)', widt / 2.5),
                 ],
               ),
+              SizedBox(height: 10),
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceAround,
                 children: [
@@ -285,8 +290,8 @@ class _ColumnAnalysisPageState extends State<AnalysisRectangularColumnsScreen> {
             border: OutlineInputBorder(),
           ),
           validator: (val) {
-            if (val == null || val.isEmpty) return 'مطلوب';
-            if (double.tryParse(val) == null) return 'أدخل رقم صحيح';
+            if (val == null || val.isEmpty) return 'empty !!!';
+            if (double.tryParse(val) == null) return 'enter number';
             return null;
           },
         ),

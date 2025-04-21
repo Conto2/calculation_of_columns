@@ -44,6 +44,35 @@ class _ColumnCalculatorPageState extends State<DesignLoadedColumnScreen> {
   double c = 0.0;
   double fy = 0.0;
   double fc = 0.0;
+  int roundNumberS(S) {
+    // استخراج خانة العشرات
+    int tens = (S ~/ 10) % 10;
+    // استخراج خانة المئات
+    int hundreds = S ~/ 100;
+
+    // إذا كانت خانة العشرات أكبر من   5،
+    // يتم تقريب الرقم إلى المئة التالية
+    if (tens >= 5) {
+      return hundreds * 100 + 50;
+    } else {
+      // إذا كانت خانة العشرات أقل من 5،
+      // فإن الرقم يُقرب إلى قيمة تنتهي بـ 50
+      return (hundreds) * 100;
+    }
+  }
+
+  double transformNumber(double n) {
+    // استخراج الجزء الصحيح من الرقم باستخدام truncate() (يتجاهل الكسور)
+    int integerPart = n.truncate();
+
+    // إذا كان الرقم الفردي، نضيف 1 ليصبح زوجيًا
+    if (integerPart % 2 != 0) {
+      integerPart += 1;
+    }
+
+    // إرجاع النتيجة على شكل double مع جزء عشري 0
+    return integerPart.toDouble();
+  }
 
   void calculateResults() {
     Pu = double.tryParse(puController.text) ?? 0.0;
@@ -53,7 +82,7 @@ class _ColumnCalculatorPageState extends State<DesignLoadedColumnScreen> {
     // double as = double.parse(asController.text);
     R = double.tryParse(rController.text) ?? 0.0;
     // double c = double.parse(cController.text);
-    rho = double.tryParse(rhoController.text) ?? 0.0;
+    // rho = double.tryParse(rhoController.text) ?? 0.0;
     b = double.tryParse(bController.text) ?? 0.0;
     d = double.tryParse(dController.text) ?? 0.0;
     h = double.tryParse(hController.text) ?? 0.0;
@@ -75,6 +104,7 @@ class _ColumnCalculatorPageState extends State<DesignLoadedColumnScreen> {
     }
 
     // Step 3: احسب Ag
+    Pu = Pu * 1000;
     Ag = Pu / phi * c * (0.85 * fc + rho * (fy - 0.85 * fc));
 
     // Step 4: نحسب rho
@@ -84,20 +114,16 @@ class _ColumnCalculatorPageState extends State<DesignLoadedColumnScreen> {
     Ast = rho2 * Ag2;
 
     // Step 5: عدد الأسياخ
-    N = (Ast / ab).ceilToDouble();
+    N = Ast / ab;
+    //.ceilToDouble();
+    N = transformNumber(N);
 
-    // Step 6: المسافة بين الأسياخ
-    // s = min(
-    //     min(16 * db, 48 * R),
-    //     min(
-    //       300,
-    //       0.75 * sqrt(Ag!),
-    //     )); // حماسي شوي
     double re1 = min(b, h);
     double re2 = 16 * db;
     double re3 = R * 48;
     s = min(re1, min(re2, re3));
-
+    s = roundNumberS(s).toDouble();
+    print(ab);
     setState(() {
       // s = min(re1, min(re2, re3));
     });
@@ -118,10 +144,8 @@ class _ColumnCalculatorPageState extends State<DesignLoadedColumnScreen> {
       bController.text = '';
       b = 0.0;
       h = 0.0;
-
       R = 0.0;
       N = 0.0;
-
       db = 0.0;
       s = 0.0;
     });
@@ -308,7 +332,7 @@ class _ColumnCalculatorPageState extends State<DesignLoadedColumnScreen> {
                 resultItem("R", R, "mm"),
                 resultItem("N", N, ""),
                 resultItem("db", db, "mm"),
-                resultItem("s", s, "mm c/c"),
+                //  resultItem("s", s, "mm c/c"),
                 Text(
                   'the section is save ',
                   style: TextStyle(fontSize: 20),
@@ -340,7 +364,7 @@ class _ColumnCalculatorPageState extends State<DesignLoadedColumnScreen> {
             border: const OutlineInputBorder(),
           ),
           keyboardType: TextInputType.number,
-          validator: (value) => value == null || value.isEmpty ? 'مطلوب' : null,
+          validator: (value) => value == null || value.isEmpty ? 'empty !!!' : null,
         ),
       ),
     );

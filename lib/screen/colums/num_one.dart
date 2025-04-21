@@ -22,12 +22,14 @@ class _ColumnCalculatorScreenState extends State<AnalysisLoadedColumnScreen> {
 
   ColumnType selectedColumnType = ColumnType.tied;
 
-  double? pNResult;
-  double? aGResult;
-
+  // double? pNResult;
+  // double? aGResult;
+  double pN = 0.0;
+  double aG = 0.0;
   @override
   Widget build(BuildContext context) {
     double widt = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text('Analysis Loaded Column'),
@@ -133,17 +135,16 @@ class _ColumnCalculatorScreenState extends State<AnalysisLoadedColumnScreen> {
                 ),
               ],
             ),
-
             // عرض النتائج
-            if (pNResult != null) ...[
+            ...[
               const SizedBox(height: 50),
               Text(
-                "A_g = ${aGResult?.toStringAsFixed(2)} : mm2",
+                "A_g = ${aG.toStringAsFixed(2)} : mm2",
                 style: const TextStyle(fontSize: 20),
               ),
               SizedBox(height: 20),
               Text(
-                "P_n = ${pNResult?.toStringAsFixed(2)} : kn",
+                "P_n = $pN : kn",
                 style: const TextStyle(fontSize: 20),
               ),
             ],
@@ -161,8 +162,10 @@ class _ColumnCalculatorScreenState extends State<AnalysisLoadedColumnScreen> {
       hController.text = '';
       dController.text = '';
       asController.text = '';
-      pNResult = 0.0;
-      aGResult = 0.0;
+      pN = 0.0;
+      aG = 0.0;
+      // pNResult = 0.0;
+      // aGResult = 0.0;
     });
     // asController.text = ' 0.0';
   }
@@ -176,31 +179,18 @@ class _ColumnCalculatorScreenState extends State<AnalysisLoadedColumnScreen> {
     final d = double.tryParse(dController.text) ?? 0.0;
     final As = double.tryParse(asController.text) ?? 0.0;
 
-    double aG = 0.0;
     if (selectedColumnType == ColumnType.tied) {
       aG = b * h;
+      pN = ((0.85 * fC * (aG - As) + fY * As) * 0.8) / 1000;
     } else {
       aG = (pi * pow(d, 2)) / 4;
-      // aG = (3.14159 * d * d) / 4;
-    }
-
-    double pN = 0.0;
-    double pN2 = 0.0;
-
-    if (selectedColumnType == ColumnType.tied) {
-      // حسب الخوارزمية للعمود المربوط
-      pN = 0.85 * fC * (aG - As) + fY * As;
-      pN2 = pN * 0.8 * pow(10, -3);
-    } else {
-      // حسب الخوارزمية للعمود الحلزوني (كأحد الأمثلة)
-      pN = 0.85 * (fC * (aG - As) + fY * As);
-      pN2 = pN * 0.85 * pow(10, -3);
+      pN = ((0.85 * fC * (aG - As) + fY * As) * 0.85) / 1000;
     }
 
     setState(() {
-      aGResult = aG;
-      pNResult = pN2;
-      pNResult = (pNResult! / 1000);
+      // aGResult = aG;
+      // pNResult = pN;
+      //  pNResult = pNResult;
     });
   }
 
