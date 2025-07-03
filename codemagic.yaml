@@ -1,0 +1,16 @@
+workflows:
+  windows-build:
+    name: Build Windows EXE
+    instance_type: windows_x2_medium
+    environment:
+      flutter: stable
+    scripts:
+      - name: Enable Windows Desktop
+        script: |
+          flutter config --enable-windows-desktop
+          flutter doctor
+      - name: Build Windows
+        script: |
+          flutter build windows --release
+    artifacts:
+      - build/windows/runner/Release/*.exe
